@@ -1,0 +1,6 @@
+pyspark>=3.5.4
+pandas>=1.4
+numpy>=1.21
+xgboost[spark]>=1.6.0
+matplotlib>=3.5
+seaborn>=0.11
