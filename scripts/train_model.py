@@ -1,3 +1,18 @@
+"""
+This script trains a readmission prediction model for diabetic patients.
+It loads a preprocessed, one-hot–encoded dataset (originally prepared using a PySpark pipeline),
+then trains a Random Forest classifier using scikit-learn.
+
+The model and its corresponding feature list are saved as `.pkl` and `.json` files, respectively,
+to support deployment in a Streamlit web application. Scikit-learn was chosen for its ease of
+integration with Python-based app frameworks, allowing efficient inference without requiring
+a Spark environment.
+
+Outputs:
+- rf_sklearn_model.pkl : Trained model for prediction
+- feature_names.json   : Ordered list of feature names to ensure input alignment
+"""
+
 import pandas as pd
 import os
 import json
@@ -7,9 +22,9 @@ from sklearn.metrics import classification_report
 import joblib
 
 # Define paths
-DATA_PATH = r"C:\Users\Joyce\Desktop\REPO\datasets\diabetes_cleaned_onehot.csv"
-MODEL_PATH = r"C:\Users\Joyce\Desktop\REPO\app\rf_sklearn_model.pkl"
-FEATURES_PATH = r"C:\Users\Joyce\Desktop\REPO\app\feature_names.json"
+DATA_PATH = "dataset/diabetes_cleaned_onehot.csv"
+MODEL_PATH = "app/rf_sklearn_model.pkl"
+FEATURES_PATH = "app/feature_names.json"
 
 
 # Load the dataset
