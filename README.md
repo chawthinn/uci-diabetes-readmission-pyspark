@@ -8,9 +8,9 @@ uci-diabetes-readmission-pyspark/
 ├── app/                        ← Streamlit + PySpark app lives here
 │   ├── app.py                  ← Main Streamlit UI
 │   ├── rf_pipeline_model/      ← PySpark pipeline model
+|   ├── train_model.py          ← Script to train and export model
 │   └── utils/
-│       ├── spark_session.py
-│       └── feature_builder.py
+│       └── preprocess.py                # build_feature_vector()
 │
 ├── datasets/                  ←  Dataset
 ├── scripts/                   ←  EDA, training, notebook merge logic
@@ -19,3 +19,9 @@ uci-diabetes-readmission-pyspark/
 ├── LICENSE
 ├── requirements.txt
 ```
+Note :
+
+We initially developed the machine learning pipeline using PySpark to handle large-scale preprocessing and feature engineering efficiently. PySpark's DataFrame-based transformations were well-suited for cleaning, encoding, and preparing the dataset in a distributed manner.
+
+However, for deployment, especially in a Streamlit-based web application, we retrained the model using scikit-learn. Scikit-learn makes it easy to serialize models into .pkl files, which are lightweight and can be directly loaded in a Python web environment. This made the model portable and deployable without needing a Spark cluster.
+
