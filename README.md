@@ -25,3 +25,5 @@ We initially developed the machine learning pipeline using PySpark to handle lar
 
 However, for deployment, especially in a Streamlit-based web application, we retrained the model using scikit-learn. Scikit-learn makes it easy to serialize models into .pkl files, which are lightweight and can be directly loaded in a Python web environment. This made the model portable and deployable without needing a Spark cluster.
 
+The trained model file (`rf_sklearn_model.pkl`) is approximately 400 MB in size and was not uploaded to the repository due to file size limitations. To generate the model locally,
+please run this script after placing the cleaned dataset in the correct path.
