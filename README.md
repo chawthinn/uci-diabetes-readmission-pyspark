@@ -3,6 +3,7 @@ This repository is for a group project as part of the Big Data Framework course.
 
 # Folder Structure 
 
+```
 uci-diabetes-readmission-pyspark/
 ├── app/                        ← Streamlit + PySpark app lives here
 │   ├── app.py                  ← Main Streamlit UI
@@ -17,3 +18,4 @@ uci-diabetes-readmission-pyspark/
 ├── README.md
 ├── LICENSE
 ├── requirements.txt
+```
