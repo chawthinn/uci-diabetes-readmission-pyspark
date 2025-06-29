@@ -1,52 +1,74 @@
 import streamlit as st
-from pyspark.ml import PipelineModel
-from utils.feature_builder import build_feature_vector
-from utils.spark_session import get_spark_session
+import joblib
+import numpy as np
+from utils.preprocess import build_feature_vector
+import json
 
-# Initialize Spark
-spark = get_spark_session()
 
-# Load model
-model = PipelineModel.load("rf_pipeline_model")
+# Load expected column order
+with open("feature_names.json", "r") as f:
+    expected_columns = json.load(f)
 
-st.title("🩺 Diabetes Readmission Prediction (Local PySpark)")
-st.write("Enter patient info to predict 30-day readmission risk.")
+# Load trained Scikit-learn model
+model = joblib.load("rf_sklearn_model.pkl")
 
-# --- UI Form Inputs
-age_num = st.slider("Age (Numeric)", 20, 90, 60)
-discharge_id = st.selectbox("Discharge Disposition ID", [1, 2, 3, 4, 5, 6, 7])
-admission_id = st.selectbox("Admission Type ID", [1, 2, 3, 4, 5, 6, 7])
-source_id = st.selectbox("Admission Source ID", [1, 2, 3, 4, 5, 6, 7])
-time_in_hospital = st.slider("Time in Hospital (days)", 1, 20, 3)
-num_medications = st.number_input("Number of Medications", 0, 100, 10)
-num_lab_procedures = st.number_input("Lab Procedures", 0, 100, 45)
-num_diagnoses = st.slider("Number of Diagnoses", 1, 16, 9)
-num_inpatient = st.slider("Inpatient Visits (past year)", 0, 20, 0)
-num_emergency = st.slider("Emergency Visits (past year)", 0, 20, 0)
-num_outpatient = st.slider("Outpatient Visits (past year)", 0, 20, 0)
-insulin = st.selectbox("Insulin Status", ["No", "Steady", "Up", "Down"])
-metformin = st.selectbox("Metformin Status", ["No", "Steady", "Up", "Down"])
+st.title("🩺 Diabetes Readmission Risk Predictor")
+st.write("Predict whether a diabetic patient will be readmitted within 30 days after discharge.")
 
-# --- Predict Button
-if st.button("Predict"):
-    input_dict = {
-        "age_num": age_num,
-        "discharge_disposition_id": discharge_id,
-        "admission_type_id": admission_id,
-        "admission_source_id": source_id,
-        "time_in_hospital": time_in_hospital,
-        "num_medications": num_medications,
-        "num_lab_procedures": num_lab_procedures,
-        "number_diagnoses": num_diagnoses,
-        "number_inpatient": num_inpatient,
-        "number_emergency": num_emergency,
-        "number_outpatient": num_outpatient,
-        "insulin": insulin,
-        "metformin": metformin
-    }
+# Top 10 user inputs (based on feature importance)
+number_inpatient = st.number_input("Number of inpatient visits", min_value=0)
+gender = st.selectbox("Gender", ["Male", "Female"])
+race = st.selectbox("Race", ["Caucasian", "AfricanAmerican", "Asian", "Hispanic", "Other"])
+insulin = st.selectbox("Insulin", ["No", "Steady", "Up", "Down"])
+metformin = st.selectbox("Metformin", ["No", "Steady", "Up", "Down"])
+number_diagnoses = st.number_input("Number of diagnoses", min_value=0)
+num_medications = st.number_input("Number of medications", min_value=0)
+time_in_hospital = st.number_input("Time in hospital (days)", min_value=1)
+num_lab_procedures = st.number_input("Number of lab procedures", min_value=0)
+number_emergency = st.number_input("Number of emergency visits", min_value=0)
+number_outpatient = st.number_input("Number of outpatient visits", min_value=0)
+num_procedures = st.number_input("Number of procedures", min_value=0)
+age = st.selectbox("Age group", ["[0-10]", "[10-20]", "[20-30]", "[30-40]", "[40-50]", "[50-60]", "[60-70]", "[70-80]", "[80-90]", "[90-100]"])
+A1Cresult = st.selectbox("A1C Result", [">7", ">8", "Norm", "None"])
+max_glu_serum = st.selectbox("Max Glucose Serum", [">200", ">300", "Norm", "None"])
+diabetesMed = st.selectbox("Diabetes Medication Prescribed", ["Yes", "No"])
 
-    feature_df = build_feature_vector(input_dict, spark)
-    prediction = model.transform(feature_df).select("prediction").collect()[0]["prediction"]
-    label = "🔴 Readmitted within 30 Days" if prediction == 1 else "🟢 Not Readmitted"
-    st.subheader("Prediction Result:")
-    st.success(label)
+# Create input dictionary
+input_dict = {
+    "number_inpatient": number_inpatient,
+    "gender": gender,
+    "race": race,
+    "number_diagnoses": number_diagnoses,
+    "num_medications": num_medications,
+    "time_in_hospital": time_in_hospital,
+    "num_lab_procedures": num_lab_procedures,
+    "number_emergency": number_emergency,
+    "number_outpatient": number_outpatient,
+    "num_procedures": num_procedures,
+    "admission_type_id": 1,  # Default or placeholder if missing from UI
+    "age": age,
+    "insulin": insulin,
+    "metformin": metformin,
+    "A1Cresult": A1Cresult,
+    "max_glu_serum": max_glu_serum,
+    "diabetesMed": diabetesMed
+}
+
+if st.button("Predict Readmission"):
+    # Build feature vector
+    full_vector = build_feature_vector(input_dict)
+
+    # Reindex to match training features
+    full_vector = full_vector.reindex(columns=expected_columns, fill_value=0)
+
+    # Predict
+    prediction = model.predict(full_vector)[0]
+
+    if prediction == "<30":
+        st.error("⚠️ High Risk: Patient likely to be readmitted within 30 days.")
+    elif prediction == ">30":
+        st.warning("⚠️ Medium Risk: Patient likely to be readmitted after 30 days.")
+    else:
+        st.success("✅ Low Risk: No readmission expected.")
+
+
