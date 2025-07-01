@@ -10,7 +10,7 @@ uci-diabetes-readmission-pyspark/
 │   ├── rf_pipeline_model/      ← PySpark pipeline model
 |   ├── train_model.py          ← Script to train and export model
 │   └── utils/
-│       └── preprocess.py                # build_feature_vector()
+│       └── preprocess.py                # build_feature_vector() -> generates and saves selected feature names to app/feature_names.json
 │
 ├── datasets/                  ←  Dataset
 ├── scripts/                   ←  EDA, training, notebook merge logic
