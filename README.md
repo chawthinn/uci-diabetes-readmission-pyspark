@@ -16,7 +16,7 @@ uci-diabetes-readmission-pyspark/
 │
 ├── scripts/                                     ← EDA, training experiments, merging notebooks
 │
-├── final_submission/                            ← ✅ Final deliverables (ready to submit)
+├── final_submission/                            ← ✅ FINAL DELIVERABLES ( FOR SUBMISSION)
 │   ├── diabetic_data.csv                        ← Raw Dataset
 |   ├── one hot encoding                         ← One Hot Encoding File
 │   ├── DiabetesReadmissionPPT.pptx              ← Presentation slides
