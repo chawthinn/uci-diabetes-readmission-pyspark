@@ -5,20 +5,31 @@ This repository is for a group project as part of the Big Data Framework course.
 
 ```
 uci-diabetes-readmission-pyspark/
-├── app/                        ← Streamlit + PySpark app lives here
-│   ├── app.py                  ← Main Streamlit UI
-│   ├── rf_pipeline_model/      ← PySpark pipeline model
-|   ├── train_model.py          ← Script to train and export model
+├── app/                                         ← Streamlit + PySpark app lives here
+│   ├── app.py                                   ← Main Streamlit UI
+│   ├── rf_pipeline_model/                       ← PySpark pipeline model
+│   ├── train_model.py                           ← Script to train and export model
 │   └── utils/
-│       └── preprocess.py                # build_feature_vector() -> generates and saves selected feature names to app/feature_names.json
+│       └── preprocess.py                        # build_feature_vector() → saves feature_names.json
 │
-├── datasets/                  ←  Dataset
-├── scripts/                   ←  EDA, training, notebook merge logic
+├── datasets/                                    ← dataset
+│
+├── scripts/                                     ← EDA, training experiments, merging notebooks
+│
+├── final_submission/                            ← ✅ Final deliverables (ready to submit)
+│   ├── diabetic_data.csv                        ← Raw Dataset
+|   ├── one hot encoding                         ← One Hot Encoding File
+│   ├── DiabetesReadmissionPPT.pptx              ← Presentation slides
+|   ├── Diabetes Readmission Report.docx         ← Final Report Document
+│   ├── part1_preprocessing_encoding.ipynb       ← Final cleaning, EDA and preprocessing code
+│   └── part2_model_training_evaluations.ipynb   ← Final modeling and training evaluations code
+│
 ├── merge_notebooks.py
 ├── README.md
 ├── LICENSE
 ├── requirements.txt
 ```
+
 Note :
 
 We initially developed the machine learning pipeline using PySpark to handle large-scale preprocessing and feature engineering efficiently. PySpark's DataFrame-based transformations were well-suited for cleaning, encoding, and preparing the dataset in a distributed manner.
