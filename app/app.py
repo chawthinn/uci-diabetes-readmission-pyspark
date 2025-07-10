@@ -21,10 +21,14 @@ This app predicts **diabetes patient readmission risk** into:
 """)
 
 # Extract and load the model
-with zipfile.ZipFile("rf_sklearn_model.zip", "r") as zip_ref:
-    zip_ref.extractall("model_dir")
+import os
+APP_DIR = os.path.dirname(__file__)
+ZIP_PATH = os.path.join(APP_DIR, "rf_sklearn_model.zip")
 
-model = joblib.load("model_dir/rf_sklearn_model.pkl")
+with zipfile.ZipFile(ZIP_PATH, "r") as zip_ref:
+    zip_ref.extractall(os.path.join(APP_DIR, "model_dir"))
+
+model = joblib.load(os.path.join(APP_DIR, "model_dir/rf_sklearn_model.pkl"))
 
 # Load model and feature info
 with open("feature_names.json") as f:
