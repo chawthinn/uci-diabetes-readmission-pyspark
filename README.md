@@ -9,9 +9,7 @@ uci-diabetes-readmission-pyspark/
 │   ├── app.py                                   ← Main Streamlit UI
 │   ├── rf_pipeline_model/                       ← PySpark pipeline model
 │   ├── train_model.py                           ← Script to train and export model
-│   └── utils/
-│       └── preprocess.py                        # build_feature_vector() → saves feature_names.json
-│
+│   
 ├── datasets/                                    ← dataset
 │
 ├── scripts/                                     ← EDA, training experiments, merging notebooks
