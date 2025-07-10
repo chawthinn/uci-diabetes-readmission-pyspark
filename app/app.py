@@ -31,10 +31,10 @@ with zipfile.ZipFile(ZIP_PATH, "r") as zip_ref:
 model = joblib.load(os.path.join(APP_DIR, "model_dir/rf_sklearn_model.pkl"))
 
 # Load model and feature info
-with open("feature_names.json") as f:
+with open(os.path.join(APP_DIR, "feature_names.json")) as f:
     all_features = json.load(f)
 
-with open("top_12_features.json") as f:
+with open(os.path.join(APP_DIR, "top_12_features.json")) as f:
     top_12_features = json.load(f)
 
 
