@@ -141,7 +141,7 @@ if page == "Predict Readmission":
 elif page == "Model Evaluation":
     st.title("Model Evaluation on Test Set")
     try:
-        test_df = pd.read_csv("diabetes_cleaned_onehot.csv")
+        test_df = pd.read_csv(os.path.join(APP_DIR, "diabetes_cleaned_onehot.csv"))
         X_test = test_df.drop(columns=[col for col in test_df.columns if col.startswith("readmitted")])
         y_test = test_df["readmitted_label"]
         y_pred = model.predict(X_test)
